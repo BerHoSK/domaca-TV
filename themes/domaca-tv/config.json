@@ -1,0 +1,21 @@
+{
+  "dock_apps": [
+    "com.netflix.ninja",
+    "com.google.android.youtube.tv",
+    "sk.berho.domacatv.radio"
+  ],
+  "fill_dock": true,
+  "live_tv_package": "",
+  "show_inputs_pill": false,
+  "clock_format": "24",
+  "wallpaper": true,
+  "wallpaper_rotation_minutes": 10,
+  "wallpaper_order": "shuffle",
+  "wallpaper_dim": 25,
+  "wallpaper_captions": true,
+  "wallpaper_true_color": true,
+  "dock_glass": true,
+  "dock_opacity": 75,
+  "app_library": true,
+  "reduced_motion": true
+}
