@@ -156,4 +156,5 @@
     <string name="name_day">Meniny: %1$s</string>
     <string name="greeting_now_playing">%1$s  ·  ▶ %2$s</string>
     <string name="dream_now_playing">▶ %1$s</string>
+    <string name="text_size">Veľkosť obrazovky</string>
 </resources>

@@ -389,6 +389,17 @@
                     android:drawableStart="@drawable/ic_apps_pill"
                     android:nextFocusDown="@+id/grid" />
 
+                <!-- Domáca TV: veľkosť obrazovky A / AA / AAA. -->
+                <TextView
+                    android:id="@+id/btnTextSize"
+                    style="@style/TopButton"
+                    android:minWidth="64dp"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="AA"
+                    android:contentDescription="@string/text_size"
+                    android:nextFocusDown="@+id/grid" />
+
                 <TextView
                     android:id="@+id/btnSettings"
                     style="@style/TopButton"

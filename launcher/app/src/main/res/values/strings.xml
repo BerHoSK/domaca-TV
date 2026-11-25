@@ -162,4 +162,5 @@
     <string name="name_day">Name day: %1$s</string>
     <string name="greeting_now_playing">%1$s  ·  ▶ %2$s</string>
     <string name="dream_now_playing">▶ %1$s</string>
+    <string name="text_size">Screen size</string>
 </resources>

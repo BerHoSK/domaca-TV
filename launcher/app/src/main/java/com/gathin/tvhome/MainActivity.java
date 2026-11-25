@@ -97,7 +97,8 @@ import java.util.Set;
 public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void attachBaseContext(android.content.Context base) {
-        super.attachBaseContext(LauncherLocale.wrap(base));   // locale
+        // locale, then Domáca TV's size (A / AA / AAA)
+        super.attachBaseContext(UiScale.wrap(LauncherLocale.wrap(base)));
     }
 
 
@@ -939,6 +940,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnSettings.setOnKeyListener(pillKeys);
         btnReorder.setOnKeyListener(pillKeys);
         btnLibraryTop.setOnKeyListener(pillKeys);
+        // Domáca TV: A / AA / AAA vpravo hore zmení veľkosť celej obrazovky naraz.
+        TextView btnTextSize = findViewById(R.id.btnTextSize);
+        if (btnTextSize != null) {
+            btnTextSize.setText(UiScale.label(this));
+            btnTextSize.setOnClickListener(v -> {
+                UiScale.next(this);
+                recreate();
+            });
+            btnTextSize.setOnKeyListener(pillKeys);
+        }
         for (View button : topAppButtons) button.setOnKeyListener(pillKeys);
         if (advancedEffects) {
             List<View> pills = new ArrayList<>(Arrays.asList(btnInputs, btnWifi, btnVpn, btnReorder, btnLibraryTop, btnSettings));
