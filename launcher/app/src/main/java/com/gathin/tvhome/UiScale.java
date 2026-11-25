@@ -1,48 +1,62 @@
 package com.gathin.tvhome;
 
 import android.content.Context;
-import android.content.res.Configuration;
 
 /**
- * Domáca TV: veľkosť celej domovskej obrazovky jedným tlačidlom vpravo hore (A / AA / AAA).
- * Mení hustotu (dpi) kontextu Domova, takže sa naraz zmenšia alebo zväčšia dlaždice, ikony aj texty.
- * Voľba je uložená len v tomto TV.
+ * Domáca TV: veľkosť dlaždíc aplikácií (80 až 120 %), nastavená tlačidlom s lupou vpravo hore.
+ * Mení len dlaždice a ikony; hodiny, pozdrav a tlačidlá hore ostávajú rovnaké. Uložené len v tomto TV.
  */
 final class UiScale {
 
-    static final float[] LEVELS = {0.85f, 1.0f, 1.15f};
-    static final String[] LABELS = {"A", "AA", "AAA"};
+    static final float[] LEVELS = {0.8f, 0.9f, 1.0f, 1.1f, 1.2f};
     private static final String PREFS = "domaca_tv";
-    private static final String KEY = "ui_scale";
-    private static final int DEFAULT = 1;
+    private static final String KEY = "tile_scale";
+    private static final String KEY_ADJUSTING = "tile_scale_adjusting";
+    private static final int DEFAULT = 2;
 
     static int level(Context ctx) {
-        int i = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getInt(KEY, DEFAULT);
+        int i = prefs(ctx).getInt(KEY, DEFAULT);
         return i < 0 || i >= LEVELS.length ? DEFAULT : i;
     }
 
-    static String label(Context ctx) {
-        return LABELS[level(ctx)];
+    static float factor(Context ctx) {
+        return LEVELS[level(ctx)];
     }
 
-    /** Ďalšia veľkosť v poradí A → AA → AAA → A; uloží ju. */
-    static void next(Context ctx) {
-        int i = (level(ctx) + 1) % LEVELS.length;
-        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putInt(KEY, i).commit();
+    static String percent(Context ctx) {
+        return Math.round(factor(ctx) * 100) + " %";
     }
 
-    /** base s upravenou hustotou, alebo base, keď je zvolená normálna veľkosť. */
-    static Context wrap(Context base) {
-        float s;
-        try {
-            s = LEVELS[level(base)];
-        } catch (RuntimeException e) {
-            return base;
-        }
-        if (s == 1.0f) return base;
-        Configuration c = new Configuration(base.getResources().getConfiguration());
-        c.densityDpi = Math.round(c.densityDpi * s);
-        return base.createConfigurationContext(c);
+    /** Posun o krok (-1 menšie, +1 väčšie); vráti true, ak sa veľkosť zmenila. */
+    static boolean step(Context ctx, int delta) {
+        int i = Math.max(0, Math.min(LEVELS.length - 1, level(ctx) + delta));
+        if (i == level(ctx)) return false;
+        prefs(ctx).edit().putInt(KEY, i).putBoolean(KEY_ADJUSTING, true).commit();
+        return true;
+    }
+
+    /** Po prekreslení Domova pokračovať v úprave na tlačidle s lupou. */
+    static boolean takeAdjusting(Context ctx) {
+        boolean a = prefs(ctx).getBoolean(KEY_ADJUSTING, false);
+        if (a) prefs(ctx).edit().putBoolean(KEY_ADJUSTING, false).apply();
+        return a;
+    }
+
+    /** Domáca TV: priehľadnosť ikon v percentách (100, 85, 70, 50); označená ikona je vždy plná. */
+    static final int[] ALPHAS = {100, 85, 70, 50};
+    private static final String KEY_ALPHA = "tile_alpha";
+
+    static int alphaPercent(Context ctx) {
+        int a = prefs(ctx).getInt(KEY_ALPHA, 100);
+        return a < 30 || a > 100 ? 100 : a;
+    }
+
+    static void setAlphaPercent(Context ctx, int percent) {
+        prefs(ctx).edit().putInt(KEY_ALPHA, percent).apply();
+    }
+
+    private static android.content.SharedPreferences prefs(Context ctx) {
+        return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
 
     private UiScale() {

@@ -338,6 +338,21 @@
                 android:focusable="false"
                 android:visibility="gone" />
 
+            <!-- Domáca TV: počasie z doplnku Počasie, nad tlačidlami vpravo hore. -->
+            <TextView
+                android:id="@+id/weatherLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/topButtons"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="8dp"
+                android:singleLine="true"
+                android:textColor="#E6FFFFFF"
+                android:textSize="18sp"
+                android:fontFamily="@string/font_regular"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/topButtons"
                 android:layout_width="wrap_content"
@@ -392,12 +407,10 @@
                 <!-- Domáca TV: veľkosť obrazovky A / AA / AAA. -->
                 <TextView
                     android:id="@+id/btnTextSize"
-                    style="@style/TopButton"
-                    android:minWidth="64dp"
-                    android:gravity="center"
+                    style="@style/TopButtonIcon"
                     android:singleLine="true"
-                    android:text="AA"
                     android:contentDescription="@string/text_size"
+                    android:drawableStart="@drawable/ic_zoom"
                     android:nextFocusDown="@+id/grid" />
 
                 <TextView

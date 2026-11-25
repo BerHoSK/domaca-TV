@@ -32,6 +32,9 @@ public final class LauncherSettingsActivity extends Activity {
     private final TextView[] rowChoices = new TextView[4];
     private static final int[] DOCK_OPACITIES = {100, 70, 50, 30};
     private final TextView[] dockChoices = new TextView[DOCK_OPACITIES.length];
+    /** Domáca TV: priehľadnosť ikon (UiScale.ALPHAS). */
+    private final TextView[] iconChoices = new TextView[UiScale.ALPHAS.length];
+    private int iconAlpha;
     private static final String[] CLOCK_FORMATS = {"system", "12", "24"};
     private final TextView[] clockChoices = new TextView[CLOCK_FORMATS.length];
     private TextView wallpaperChoice;
@@ -97,6 +100,19 @@ public final class LauncherSettingsActivity extends Activity {
                 if (dockOpacity == value) return;
                 dockOpacity = value;
                 choices.edit().putInt(Config.DOCK_OPACITY_KEY, value).apply();
+                changed();
+                refresh();
+            });
+        }
+        iconAlpha = UiScale.alphaPercent(this);
+        int[] iconIds = {R.id.icons100, R.id.icons85, R.id.icons70, R.id.icons50};
+        for (int i = 0; i < iconIds.length; i++) {
+            final int value = UiScale.ALPHAS[i];
+            iconChoices[i] = findViewById(iconIds[i]);
+            iconChoices[i].setOnClickListener(v -> {
+                if (iconAlpha == value) return;
+                iconAlpha = value;
+                UiScale.setAlphaPercent(this, value);
                 changed();
                 refresh();
             });
@@ -304,6 +320,9 @@ public final class LauncherSettingsActivity extends Activity {
         }
         for (int i = 0; i < clockChoices.length; i++) {
             clockChoices[i].setSelected(CLOCK_FORMATS[i].equals(clockFormat));
+        }
+        for (int i = 0; i < iconChoices.length; i++) {
+            iconChoices[i].setSelected(iconAlpha == UiScale.ALPHAS[i]);
         }
         animationsChoice.setText(getString(R.string.animations_state,
                 getString(animations ? R.string.on : R.string.off)));

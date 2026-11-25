@@ -6,6 +6,10 @@
 
     <!-- The only permission: Open-Meteo, for the place search, the weather and the air quality. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Domáca TV: počasie pre launcher, len medzi aplikáciami s rovnakým podpisom. -->
+    <permission android:name="sk.berho.domacatv.permission.RADIO_STATE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="sk.berho.domacatv.permission.RADIO_STATE" />
 
     <application
         android:allowBackup="false"
@@ -30,5 +34,11 @@
             </intent-filter>
             <meta-data android:name="com.gathin.tvhome.card" android:resource="@xml/module_card" />
         </activity>
+        <receiver android:name=".HomeWeatherReceiver" android:exported="true"
+            android:permission="sk.berho.domacatv.permission.RADIO_STATE">
+            <intent-filter>
+                <action android:name="sk.berho.domacatv.weather.QUERY" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

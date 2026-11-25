@@ -97,8 +97,7 @@ import java.util.Set;
 public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     protected void attachBaseContext(android.content.Context base) {
-        // locale, then Domáca TV's size (A / AA / AAA)
-        super.attachBaseContext(UiScale.wrap(LauncherLocale.wrap(base)));
+        super.attachBaseContext(LauncherLocale.wrap(base));   // locale
     }
 
 
@@ -187,6 +186,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private TextView nameDay;
     private boolean nameDays;
     private NowPlaying nowPlaying;
+    private TextView weatherLine;
+    private NowWeather nowWeather;
+    private boolean sizeAdjusting;
     private View clockBlock;
     private View btnInputs;
     /** config show_inputs_pill: false keeps the Inputs pill hidden even when the TV has inputs. */
@@ -555,6 +557,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         nameDay = findViewById(R.id.nameDay);
         nameDays = getResources().getBoolean(R.bool.name_day_sk);
         nowPlaying = new NowPlaying(this, this::updateGreeting);
+        weatherLine = findViewById(R.id.weatherLine);
+        nowWeather = new NowWeather(this, this::showWeather);
         if (!cfg.showGreeting) greeting.setVisibility(View.GONE);
         // Keep the other header layouts as designed: their extra lines change the block's centre.
         if (!cfg.showGreeting && !cfg.dateBelowClock && !cfg.shamsiDate && !cfg.lunarDate
@@ -704,6 +708,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             grid.setLayoutAnimation(new LayoutAnimationController(
                     AnimationUtils.loadAnimation(this, R.anim.tile_enter), 0.06f));
         }
+        AppAdapter.tileScale = UiScale.factor(this);
+        AppAdapter.tileAlpha = UiScale.alphaPercent(this) / 100f;
         adapter = new AppAdapter(this, this, COLUMNS, cfg);
         dockApps = cfg.dockApps;
         fillDockLeavesSlots = !cfg.fillDock;
@@ -940,15 +946,37 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnSettings.setOnKeyListener(pillKeys);
         btnReorder.setOnKeyListener(pillKeys);
         btnLibraryTop.setOnKeyListener(pillKeys);
-        // Domáca TV: A / AA / AAA vpravo hore zmení veľkosť celej obrazovky naraz.
+        // Domáca TV: lupa vpravo hore. OK zapne úpravu, šípky vľavo/vpravo zmenšia/zväčšia dlaždice,
+        // OK alebo Späť úpravu ukončí. Hodiny a texty hore ostávajú rovnaké.
         TextView btnTextSize = findViewById(R.id.btnTextSize);
         if (btnTextSize != null) {
-            btnTextSize.setText(UiScale.label(this));
-            btnTextSize.setOnClickListener(v -> {
-                UiScale.next(this);
-                recreate();
+            btnTextSize.setOnClickListener(v -> setSizeAdjusting(btnTextSize, true));
+            btnTextSize.setOnKeyListener((v, keyCode, event) -> {
+                if (!sizeAdjusting) return pillKeys.onKey(v, keyCode, event);
+                boolean up = event.getAction() == KeyEvent.ACTION_UP;
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_DPAD_LEFT:
+                    case KeyEvent.KEYCODE_DPAD_RIGHT:
+                        if (!up && UiScale.step(this, keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 1 : -1)) recreate();
+                        return true;
+                    case KeyEvent.KEYCODE_DPAD_CENTER:
+                    case KeyEvent.KEYCODE_ENTER:
+                    case KeyEvent.KEYCODE_BACK:
+                        if (up) setSizeAdjusting(btnTextSize, false);
+                        return true;
+                    case KeyEvent.KEYCODE_DPAD_UP:
+                    case KeyEvent.KEYCODE_DPAD_DOWN:
+                        return true;
+                    default:
+                        return false;
+                }
             });
-            btnTextSize.setOnKeyListener(pillKeys);
+            if (UiScale.takeAdjusting(this)) {
+                btnTextSize.post(() -> {
+                    btnTextSize.requestFocus();
+                    setSizeAdjusting(btnTextSize, true);
+                });
+            }
         }
         for (View button : topAppButtons) button.setOnKeyListener(pillKeys);
         if (advancedEffects) {
@@ -1115,6 +1143,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         updateClockVisibility();
         clockRefresh.start();   // with timeReceiver: while Home is visible, paused or not
         if (nowPlaying != null) nowPlaying.start();
+        if (nowWeather != null) nowWeather.start();
         tileRefresh.onStart();
     }
 
@@ -1369,6 +1398,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         started = false;
         unregisterReceiver(timeReceiver);
         if (nowPlaying != null) nowPlaying.stop();
+        if (nowWeather != null) nowWeather.stop();
         clockRefresh.stop();
         handler.removeCallbacks(clockCheck);
         stopped = true;
@@ -3102,6 +3132,32 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean libraryFromVpnPill;
 
     /** Turns a labelled top pill into the round TopButtonIcon shape: no text, the icon centred by even padding. */
+    /** Domáca TV: tlačidlo s lupou ukazuje počas úpravy veľkosť ("◀ 100 % ▶"), inak len lupu. */
+    private void setSizeAdjusting(TextView button, boolean on) {
+        sizeAdjusting = on;
+        ViewGroup.LayoutParams lp = button.getLayoutParams();
+        if (on) {
+            button.setText("◀ " + UiScale.percent(this) + " ▶");
+            button.setCompoundDrawablePadding(Math.round(6 * density));
+            button.setPaddingRelative(Math.round(14 * density), 0, Math.round(14 * density), 0);
+            lp.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        } else {
+            button.setText(null);
+            button.setCompoundDrawablePadding(0);
+            button.setPaddingRelative(Math.round(10 * density), 0, Math.round(10 * density), 0);
+            lp.width = Math.round(42 * density);
+        }
+        button.setLayoutParams(lp);
+    }
+
+    /** Domáca TV: počasie z doplnku Počasie nad tlačidlami vpravo hore. */
+    private void showWeather() {
+        String line = nowWeather != null ? nowWeather.line() : null;
+        if (weatherLine == null) return;
+        weatherLine.setText(line == null ? "" : line);
+        weatherLine.setVisibility(line == null ? View.GONE : View.VISIBLE);
+    }
+
     private void makeIconOnly(TextView pill) {
         pill.setContentDescription(pill.getText());
         pill.setText(null);
