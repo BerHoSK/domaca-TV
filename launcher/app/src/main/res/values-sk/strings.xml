@@ -158,4 +158,6 @@
     <string name="dream_now_playing">▶ %1$s</string>
     <string name="text_size">Veľkosť dlaždíc</string>
     <string name="icon_opacity_label">Priehľadnosť ikon</string>
+    <string name="photo_minutes_label">Výmena fotiek</string>
+    <string name="idle_minutes_label">Šetrič na Domove po</string>
 </resources>

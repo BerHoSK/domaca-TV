@@ -35,6 +35,10 @@ public final class LauncherSettingsActivity extends Activity {
     /** Domáca TV: priehľadnosť ikon (UiScale.ALPHAS). */
     private final TextView[] iconChoices = new TextView[UiScale.ALPHAS.length];
     private int iconAlpha;
+    private final TextView[] photoChoices = new TextView[UiScale.PHOTO_MINUTES.length];
+    private final TextView[] idleChoices = new TextView[UiScale.IDLE_MINUTES.length];
+    private int photoMinutes;
+    private int idleMinutes;
     private static final String[] CLOCK_FORMATS = {"system", "12", "24"};
     private final TextView[] clockChoices = new TextView[CLOCK_FORMATS.length];
     private TextView wallpaperChoice;
@@ -113,6 +117,32 @@ public final class LauncherSettingsActivity extends Activity {
                 if (iconAlpha == value) return;
                 iconAlpha = value;
                 UiScale.setAlphaPercent(this, value);
+                changed();
+                refresh();
+            });
+        }
+        photoMinutes = config.wallpaperRotationMinutes;
+        idleMinutes = config.homeIdleClockMinutes;
+        int[] photoIds = {R.id.photo1, R.id.photo2, R.id.photo5, R.id.photo10};
+        for (int i = 0; i < photoIds.length; i++) {
+            final int value = UiScale.PHOTO_MINUTES[i];
+            photoChoices[i] = findViewById(photoIds[i]);
+            photoChoices[i].setOnClickListener(v -> {
+                if (photoMinutes == value) return;
+                photoMinutes = value;
+                UiScale.put(this, UiScale.KEY_PHOTO_MINUTES, value);
+                changed();
+                refresh();
+            });
+        }
+        int[] idleIds = {R.id.idle0, R.id.idle2, R.id.idle5, R.id.idle10, R.id.idle15};
+        for (int i = 0; i < idleIds.length; i++) {
+            final int value = UiScale.IDLE_MINUTES[i];
+            idleChoices[i] = findViewById(idleIds[i]);
+            idleChoices[i].setOnClickListener(v -> {
+                if (idleMinutes == value) return;
+                idleMinutes = value;
+                UiScale.put(this, UiScale.KEY_IDLE_MINUTES, value);
                 changed();
                 refresh();
             });
@@ -320,6 +350,12 @@ public final class LauncherSettingsActivity extends Activity {
         }
         for (int i = 0; i < clockChoices.length; i++) {
             clockChoices[i].setSelected(CLOCK_FORMATS[i].equals(clockFormat));
+        }
+        for (int i = 0; i < photoChoices.length; i++) {
+            photoChoices[i].setSelected(photoMinutes == UiScale.PHOTO_MINUTES[i]);
+        }
+        for (int i = 0; i < idleChoices.length; i++) {
+            idleChoices[i].setSelected(idleMinutes == UiScale.IDLE_MINUTES[i]);
         }
         for (int i = 0; i < iconChoices.length; i++) {
             iconChoices[i].setSelected(iconAlpha == UiScale.ALPHAS[i]);

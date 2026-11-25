@@ -20,5 +20,6 @@
   "app_library": true,
   "reduced_motion": true,
   "clock_wallpaper": true,
-  "clock_wallpaper_dim": 30
+  "clock_wallpaper_dim": 30,
+  "home_idle_clock_minutes": 5
 }

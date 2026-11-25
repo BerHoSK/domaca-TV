@@ -164,4 +164,6 @@
     <string name="dream_now_playing">▶ %1$s</string>
     <string name="text_size">Tile size</string>
     <string name="icon_opacity_label">Icon opacity</string>
+    <string name="photo_minutes_label">Photo change every</string>
+    <string name="idle_minutes_label">Home screensaver after</string>
 </resources>

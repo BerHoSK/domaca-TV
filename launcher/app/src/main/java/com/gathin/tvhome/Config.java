@@ -688,6 +688,10 @@ final class Config {
         boolean wallpaperEnabled = json == null || bool(json, "wallpaper", true);
         if (!wallpaperEnabled) wallpaper = null;
         int rotationMinutes = json == null ? 0 : integer(json, "wallpaper_rotation_minutes", 0, 0, 1440);
+        // Domáca TV: výmena fotiek a šetrič na Domove nastavené priamo na TV (Nastavenia launchera).
+        SharedPreferences domaca = ctx.getSharedPreferences(UiScale.PREFS, Context.MODE_PRIVATE);
+        rotationMinutes = domaca.getInt(UiScale.KEY_PHOTO_MINUTES, rotationMinutes);
+        idleClockMinutes = domaca.getInt(UiScale.KEY_IDLE_MINUTES, idleClockMinutes);
         int wallpaperDim = json == null ? 0 : integer(json, "wallpaper_dim", 0, 0, 90);
         int dockOpacity = json == null ? 100 : integer(json, "dock_opacity", 100, 30, 100);
         dockOpacity = chosenDockOpacity(choices.getInt(DOCK_OPACITY_KEY, -1), dockOpacity);

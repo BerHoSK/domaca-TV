@@ -9,7 +9,20 @@ import android.content.Context;
 final class UiScale {
 
     static final float[] LEVELS = {0.8f, 0.9f, 1.0f, 1.1f, 1.2f};
-    private static final String PREFS = "domaca_tv";
+    static final String PREFS = "domaca_tv";
+    /** Minúty medzi fotkami na Domove aj v šetriči; minúty nečinnosti Domova pred šetričom (0 = vypnutý). */
+    static final String KEY_PHOTO_MINUTES = "photo_minutes";
+    static final String KEY_IDLE_MINUTES = "idle_minutes";
+    static final int[] PHOTO_MINUTES = {1, 2, 5, 10};
+    static final int[] IDLE_MINUTES = {0, 2, 5, 10, 15};
+
+    static int get(Context ctx, String key, int fallback) {
+        return prefs(ctx).getInt(key, fallback);
+    }
+
+    static void put(Context ctx, String key, int value) {
+        prefs(ctx).edit().putInt(key, value).apply();
+    }
     private static final String KEY = "tile_scale";
     private static final String KEY_ADJUSTING = "tile_scale_adjusting";
     private static final int DEFAULT = 2;

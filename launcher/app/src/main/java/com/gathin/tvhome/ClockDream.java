@@ -1,8 +1,6 @@
 package com.gathin.tvhome;
 
 import android.service.dreams.DreamService;
-import android.view.View;
-import android.widget.TextView;
 
 /**
  * Screensaver: the launcher's thin clock and date on black, over a slow ambient glow (ClockScene).
@@ -11,8 +9,7 @@ import android.widget.TextView;
 public class ClockDream extends DreamService {
 
     private ClockScene scene;
-    private NowPlaying nowPlaying;
-    private TextView radioLine;
+    private DreamExtras extras;
 
     @Override
     protected void attachBaseContext(android.content.Context base) {
@@ -30,22 +27,8 @@ public class ClockDream extends DreamService {
         scene = new ClockScene(getWindow().getDecorView());
         scene.useHomeWallpaper(this);
         // Domáca TV: meniny pod dátumom a hrajúca stanica.
-        TextView nameDay = getWindow().getDecorView().findViewById(R.id.dreamNameDay);
-        String names = getResources().getBoolean(R.bool.name_day_sk) ? NameDays.today() : "";
-        if (!names.isEmpty()) {
-            nameDay.setText(getString(R.string.name_day, names));
-            nameDay.setVisibility(View.VISIBLE);
-        }
-        radioLine = getWindow().getDecorView().findViewById(R.id.dreamRadio);
-        nowPlaying = new NowPlaying(this, this::showStation);
-        nowPlaying.start();
-    }
-
-    private void showStation() {
-        String station = nowPlaying != null ? nowPlaying.station() : null;
-        if (radioLine == null) return;
-        radioLine.setText(station == null ? "" : getString(R.string.dream_now_playing, station));
-        radioLine.setVisibility(station == null ? View.GONE : View.VISIBLE);
+        extras = new DreamExtras(this, getWindow().getDecorView());
+        extras.start();
     }
 
     @Override
@@ -63,7 +46,7 @@ public class ClockDream extends DreamService {
     @Override
     public void onDetachedFromWindow() {
         if (scene != null) scene.stop();
-        if (nowPlaying != null) nowPlaying.stop();
+        if (extras != null) extras.stop();
         super.onDetachedFromWindow();
     }
 }
