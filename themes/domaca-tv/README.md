@@ -3,7 +3,7 @@
 Moja téma pre Xiaomi Mi Box S (MIBOX4): dok s mojimi aplikáciami, tapeta z vlastných fotiek, 24-hodinové hodiny, bez ponuky Vstupy (box nemá HDMI vstup ani tuner).
 
 ## Dok
-Netflix, YouTube a Rádio sú zadané v `config.json`. Sweet.tv, Voyo, Magio TV a Seznam sa doplnia
+Sweet.tv, Netflix, YouTube a Rádio sú zadané v `config.json`. Voyo, Magio TV a Seznam sa doplnia
 po inštalácii podľa presných názvov balíkov z boxu (`pm list packages`), alebo priamo na TV cez
 Nastavenia → Upraviť dok. Aplikácia, ktorá nie je nainštalovaná, sa v doku preskočí.
 
