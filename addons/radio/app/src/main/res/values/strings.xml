@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rádio</string>
+    <string name="title">Rádio</string>
+    <string name="status_idle">Nič nehrá. Vyberte stanicu a stlačte OK.</string>
+    <string name="status_connecting">Pripájam: %1$s…</string>
+    <string name="status_playing">▶ Hrá: %1$s</string>
+    <string name="status_error">Stanica %1$s sa nedá prehrať. Skúste inú.</string>
+    <string name="stop">■ Zastaviť</string>
+    <string name="add">+ Pridať stanicu</string>
+    <string name="reset">Obnoviť predvolené stanice</string>
+    <string name="hint">OK prehrá alebo zastaví · podržaním OK stanicu odstránite</string>
+    <string name="delete_title">Odstrániť stanicu %1$s?</string>
+    <string name="delete">Odstrániť</string>
+    <string name="cancel">Zrušiť</string>
+    <string name="save">Uložiť</string>
+    <string name="add_title">Nová stanica</string>
+    <string name="add_name">Názov stanice</string>
+    <string name="add_url">Adresa streamu (http… alebo https…)</string>
+    <string name="add_invalid">Zadajte názov aj adresu začínajúcu http:// alebo https://</string>
+    <string name="reset_title">Vrátiť pôvodný zoznam staníc?</string>
+    <string name="reset_ok">Obnoviť</string>
+    <string name="channel">Prehrávanie rádia</string>
+</resources>

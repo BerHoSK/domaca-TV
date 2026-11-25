@@ -43,17 +43,27 @@ jobs:
           chmod +x gradlew
           ./gradlew --no-daemon testReleaseUnitTest assembleRelease
           cp app/build/outputs/apk/release/app-release.apk ../domaca-tv-launcher.apk
+      - name: Zostavenie doplnku Rádio
+        working-directory: addons/radio
+        env:
+          DOMACA_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon testReleaseUnitTest assembleRelease
+          cp app/build/outputs/apk/release/app-release.apk ../../domaca-tv-radio.apk
       - uses: actions/upload-artifact@v4
         with:
           name: domaca-tv-launcher
-          path: domaca-tv-launcher.apk
+          path: |
+            domaca-tv-launcher.apk
+            domaca-tv-radio.apk
           retention-days: 30
       - name: Zverejnenie v Releases (Najnovší launcher)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete najnovsi --yes --cleanup-tag || true
-          gh release create najnovsi domaca-tv-launcher.apk \
+          gh release create najnovsi domaca-tv-launcher.apk domaca-tv-radio.apk \
             --title "Najnovší launcher" \
-            --notes "Automaticky zostavené z commitu ${GITHUB_SHA::7}. Stiahni domaca-tv-launcher.apk." \
+            --notes "Automaticky zostavené z commitu ${GITHUB_SHA::7}. Launcher: domaca-tv-launcher.apk, doplnok Rádio: domaca-tv-radio.apk." \
             --target "$GITHUB_SHA" --latest

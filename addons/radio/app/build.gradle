@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'sk.berho.domacatv.radio'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'sk.berho.domacatv.radio'
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName '0.1'
+    }
+
+    // Rovnaký pevný kľúč ako launcher (GitHub Secrets), inak ladiaci kľúč.
+    def ksFile = System.getenv('DOMACA_KEYSTORE_FILE')
+    def hasReleaseKey = ksFile != null && file(ksFile).exists()
+    signingConfigs {
+        if (hasReleaseKey) {
+            domaca {
+                storeFile file(ksFile)
+                storePassword System.getenv('DOMACA_KEYSTORE_PASSWORD')
+                keyAlias 'domaca-tv'
+                keyPassword System.getenv('DOMACA_KEYSTORE_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig hasReleaseKey ? signingConfigs.domaca : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}

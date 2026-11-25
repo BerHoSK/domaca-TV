@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 16:9 banner, vlastná kresba: rádio a vlny. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp" android:height="180dp"
+    android:viewportWidth="320" android:viewportHeight="180">
+    <path android:fillColor="#1A1210" android:pathData="M0,0h320v180h-320z" />
+    <path android:strokeColor="#F5F5F5" android:strokeWidth="5" android:strokeLineCap="round" android:pathData="M120,62L176,34" />
+    <path android:fillColor="#E8553D" android:pathData="M100,62h120a10,10 0 0 1 10,10v60a10,10 0 0 1 -10,10h-120a10,10 0 0 1 -10,-10v-60a10,10 0 0 1 10,-10z" />
+    <path android:fillColor="#2A1A16" android:pathData="M140,102m-24,0a24,24 0 1 1 48,0a24,24 0 1 1 -48,0" />
+    <path android:fillColor="#F5F5F5" android:pathData="M180,82h34v7h-34zM180,98h34v7h-34zM180,114h34v7h-34z" />
+    <path android:strokeColor="#E8553D" android:strokeWidth="5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M248,80a30,30 0 0 1 0,44M262,68a48,48 0 0 1 0,68" />
+</vector>
