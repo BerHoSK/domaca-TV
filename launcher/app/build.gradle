@@ -17,6 +17,21 @@ android {
         versionName '3.6'
     }
 
+    // Domáca TV: pevný podpisový kľúč z GitHub Secrets (workflow ho uloží do súboru a nastaví premenné).
+    // Bez nich sa APK podpíše ladiacim kľúčom ako predtým.
+    def ksFile = System.getenv('DOMACA_KEYSTORE_FILE')
+    def hasReleaseKey = ksFile != null && file(ksFile).exists()
+    signingConfigs {
+        if (hasReleaseKey) {
+            domaca {
+                storeFile file(ksFile)
+                storePassword System.getenv('DOMACA_KEYSTORE_PASSWORD')
+                keyAlias 'domaca-tv'
+                keyPassword System.getenv('DOMACA_KEYSTORE_PASSWORD')
+            }
+        }
+    }
+
     buildTypes {
         release {
             // R8 strips and optimises the code (AndroidX included): smaller APK, faster start on a slow TV CPU.
@@ -24,7 +39,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             // Sideloaded over ADB, never published: sign with the debug key so it installs over a debug build.
-            signingConfig signingConfigs.debug
+            signingConfig hasReleaseKey ? signingConfigs.domaca : signingConfigs.debug
         }
     }
 
