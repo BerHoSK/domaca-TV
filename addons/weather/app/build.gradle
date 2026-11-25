@@ -14,13 +14,27 @@ android {
         versionName '1.0'
     }
 
+    // Domáca TV: rovnaký pevný kľúč ako launcher (GitHub Secrets), inak ladiaci kľúč.
+    def ksFile = System.getenv('DOMACA_KEYSTORE_FILE')
+    def hasReleaseKey = ksFile != null && file(ksFile).exists()
+    signingConfigs {
+        if (hasReleaseKey) {
+            domaca {
+                storeFile file(ksFile)
+                storePassword System.getenv('DOMACA_KEYSTORE_PASSWORD')
+                keyAlias 'domaca-tv'
+                keyPassword System.getenv('DOMACA_KEYSTORE_PASSWORD')
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
             // Sideloaded over ADB like the launcher: signed with the debug key. Sign your own releases with your key.
-            signingConfig signingConfigs.debug
+            signingConfig hasReleaseKey ? signingConfigs.domaca : signingConfigs.debug
         }
     }
 
