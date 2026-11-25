@@ -11,7 +11,7 @@
   "wallpaper": true,
   "wallpaper_rotation_minutes": 10,
   "wallpaper_order": "shuffle",
-  "wallpaper_dim": 25,
+  "wallpaper_dim": 0,
   "wallpaper_captions": true,
   "wallpaper_true_color": true,
   "dock_glass": true,

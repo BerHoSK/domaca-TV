@@ -16,5 +16,5 @@ lebo repozitár je verejný. Popisy k fotkám: `wallpapers/captions.txt`, jeden 
 Nahratie do boxu z PC: `TV_HOST=<ip boxu> tools/theme.sh themes/domaca-tv`
 (Windows: `tools\theme.ps1`).
 
-Fotky sa striedajú každých 10 minút v náhodnom poradí a sú mierne stmavené (25 %), aby boli
-hodiny čitateľné.
+Fotky sa striedajú každých 10 minút v náhodnom poradí. Stmavenie robí `tools/wallpaper_prep.py`
+pri príprave fotiek, preto je `wallpaper_dim` 0.
