@@ -1,9 +1,8 @@
 name: CI
 
+# Vo forku domaca-TV len ručne; APK zostavuje domaca-tv-apk.yml.
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
