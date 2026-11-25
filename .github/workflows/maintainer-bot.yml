@@ -16,13 +16,8 @@
 # review again with context-blocks DPX as a dry run (nothing written; its verdict goes to the log as MB-SHADOW
 # lines, on its own ledger so it never uses the live cap). Remove the two shadow steps after the comparison.
 name: maintainer-bot
+# Vo forku domaca-TV len ručne (bot patrí pôvodnému repozitáru).
 on:
-  pull_request_target:
-    types: [opened, synchronize, reopened, ready_for_review]
-  issue_comment:
-    types: [created]
-  schedule:
-    - cron: "23 */6 * * *"
   workflow_dispatch:
     inputs:
       pr:
