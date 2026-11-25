@@ -18,5 +18,7 @@
   "dock_glass": true,
   "dock_opacity": 75,
   "app_library": true,
-  "reduced_motion": true
+  "reduced_motion": true,
+  "clock_wallpaper": true,
+  "clock_wallpaper_dim": 30
 }

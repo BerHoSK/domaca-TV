@@ -266,6 +266,22 @@
                             android:includeFontPadding="false"
                             android:visibility="gone" />
 
+                        <!-- Domáca TV: slovenské meniny nad dátumom (bool name_day_sk). -->
+                        <TextView
+                            android:id="@+id/nameDay"
+                            android:gravity="left"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:textColor="#E6FFFFFF"
+                            android:textSize="15sp"
+                            android:fontFamily="@string/font_regular"
+                            android:letterSpacing="0.02"
+                            android:includeFontPadding="false"
+                            android:visibility="gone" />
+
                         <TextClock
                             android:id="@+id/date"
                             android:gravity="left"

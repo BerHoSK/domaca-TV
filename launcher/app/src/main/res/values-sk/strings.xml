@@ -152,4 +152,8 @@
     <string name="clock_format_system">Systém</string>
     <string name="clock_format_12">12-hodinový</string>
     <string name="clock_format_24">24-hodinový</string>
+    <!-- Domáca TV -->
+    <string name="name_day">Meniny: %1$s</string>
+    <string name="greeting_now_playing">%1$s  ·  ▶ %2$s</string>
+    <string name="dream_now_playing">▶ %1$s</string>
 </resources>

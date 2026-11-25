@@ -175,9 +175,26 @@ public final class RadioService extends Service {
         }
     }
 
-    private static void setState(State s) {
+    private void setState(State s) {
         state = s;
         if (listener != null) listener.run();
+        announce(this);
+    }
+
+    static final String ACTION_STATE = "sk.berho.domacatv.radio.STATE";
+    static final String PERMISSION = "sk.berho.domacatv.permission.RADIO_STATE";
+    static final String LAUNCHER = "com.gathin.tvhome";
+
+    /** Pošle launcheru Domáca TV, čo hrá (pozdrav na Domove a šetrič). */
+    static void announce(android.content.Context ctx) {
+        boolean playing = currentName != null && (state == State.PLAYING || state == State.CONNECTING);
+        Intent i = new Intent(ACTION_STATE).setPackage(LAUNCHER)
+                .putExtra("playing", playing)
+                .putExtra("name", playing ? currentName : "");
+        try {
+            ctx.sendBroadcast(i, PERMISSION);
+        } catch (RuntimeException ignored) {
+        }
     }
 
     private Notification notification(String text) {

@@ -182,6 +182,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean animations;
     private boolean advancedEffects;
     private TextView greeting;
+    /** Domáca TV: meniny nad dátumom a stanica, ktorú práve hrá doplnok Rádio, za pozdravom. */
+    private TextView nameDay;
+    private boolean nameDays;
+    private NowPlaying nowPlaying;
     private View clockBlock;
     private View btnInputs;
     /** config show_inputs_pill: false keeps the Inputs pill hidden even when the TV has inputs. */
@@ -547,6 +551,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         clockBlock = findViewById(R.id.leftBlock);
         clockRefresh = new ClockRefresh(clockBlock);
         greetingColor = greeting.getCurrentTextColor();
+        nameDay = findViewById(R.id.nameDay);
+        nameDays = getResources().getBoolean(R.bool.name_day_sk);
+        nowPlaying = new NowPlaying(this, this::updateGreeting);
         if (!cfg.showGreeting) greeting.setVisibility(View.GONE);
         // Keep the other header layouts as designed: their extra lines change the block's centre.
         if (!cfg.showGreeting && !cfg.dateBelowClock && !cfg.shamsiDate && !cfg.lunarDate
@@ -1096,6 +1103,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         }
         updateClockVisibility();
         clockRefresh.start();   // with timeReceiver: while Home is visible, paused or not
+        if (nowPlaying != null) nowPlaying.start();
         tileRefresh.onStart();
     }
 
@@ -1349,6 +1357,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         super.onStop();
         started = false;
         unregisterReceiver(timeReceiver);
+        if (nowPlaying != null) nowPlaying.stop();
         clockRefresh.stop();
         handler.removeCallbacks(clockCheck);
         stopped = true;
@@ -2794,6 +2803,15 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             greeting.setText(greetingName.isEmpty() ? getString(res)
                     : getString(R.string.greeting_with_name, getString(res), greetingName));
             greeting.setTextColor(greetingColor);
+        }
+        String station = nowPlaying != null ? nowPlaying.station() : null;
+        if (station != null) {
+            greeting.setText(getString(R.string.greeting_now_playing, greeting.getText(), station));
+        }
+        if (nameDay != null) {
+            String names = nameDays ? NameDays.today() : "";
+            nameDay.setText(names.isEmpty() ? "" : getString(R.string.name_day, names));
+            nameDay.setVisibility(names.isEmpty() ? View.GONE : View.VISIBLE);
         }
         if (shamsi) shamsiDate.setText(Shamsi.today(getResources()));
         if (lunar) lunarDate.setText(Lunar.today(getResources(), lunarOffset));

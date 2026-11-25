@@ -61,5 +61,28 @@
             android:fontFamily="@string/font_regular"
             android:letterSpacing="0.14"
             android:textAllCaps="true" />
+
+        <!-- Domáca TV: meniny a stanica, ktorú hrá Rádio. -->
+        <TextView
+            android:id="@+id/dreamNameDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="10dp"
+            android:textColor="#B3FFFFFF"
+            android:textSize="20sp"
+            android:fontFamily="@string/font_regular"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/dreamRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="8dp"
+            android:textColor="#FFE8553D"
+            android:textSize="24sp"
+            android:fontFamily="@string/font_medium"
+            android:visibility="gone" />
     </LinearLayout>
 </FrameLayout>

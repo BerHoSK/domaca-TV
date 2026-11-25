@@ -11,6 +11,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <!-- Prehrávač nezaspí uprostred skladby. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Stav rádia pre launcher Domáca TV (pozdrav a šetrič). Len pre aplikácie s rovnakým podpisom. -->
+    <permission android:name="sk.berho.domacatv.permission.RADIO_STATE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="sk.berho.domacatv.permission.RADIO_STATE" />
 
     <application
         android:allowBackup="false"
@@ -33,6 +37,13 @@
             </intent-filter>
             <meta-data android:name="com.gathin.tvhome.card" android:resource="@xml/module_card" />
         </activity>
+
+        <receiver android:name=".StateQueryReceiver" android:exported="true"
+            android:permission="sk.berho.domacatv.permission.RADIO_STATE">
+            <intent-filter>
+                <action android:name="sk.berho.domacatv.radio.QUERY" />
+            </intent-filter>
+        </receiver>
 
         <service android:name=".RadioService" android:exported="false"
             android:foregroundServiceType="mediaPlayback" />

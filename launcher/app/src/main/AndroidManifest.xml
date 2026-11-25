@@ -24,7 +24,14 @@
 
     <!-- Android 11+ package visibility: lets the launcher list the TV apps it shows as tiles, and the
          apps that declare a module card (docs/specs/card.md). -->
+    <!-- Domáca TV: stav doplnku Rádio. Podpisové oprávnenie: dostane ho len aplikácia s rovnakým kľúčom.
+         Deklaruje ho launcher aj Rádio, aby nezáležalo na poradí inštalácie. -->
+    <permission android:name="sk.berho.domacatv.permission.RADIO_STATE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="sk.berho.domacatv.permission.RADIO_STATE" />
+
     <queries>
+        <package android:name="sk.berho.domacatv.radio" />
         <!-- The standard settings handlers, so package visibility doesn't hide them and send the pills to a vendor fallback by mistake. -->
         <intent>
             <action android:name="android.settings.SETTINGS" />

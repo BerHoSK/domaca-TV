@@ -564,4 +564,6 @@
     <!-- Tiles drawn from the app's icon and name instead of its banner (for banners that crop badly). -->
     <string-array name="icon_tiles" translatable="false">
     </string-array>
+    <!-- Domáca TV: slovenské meniny nad dátumom na Domove aj v šetriči. -->
+    <bool name="name_day_sk">true</bool>
 </resources>
