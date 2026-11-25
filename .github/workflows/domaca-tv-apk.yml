@@ -1,7 +1,8 @@
 name: Domáca TV – zostavenie APK
 
 # Zostaví launcher pri každom pushi do main alebo ručne (Actions → Run workflow).
-# Hotové APK nájdeš v behu workflowu dole v časti "Artifacts" (domaca-tv-launcher).
+# Hotové APK nájdeš na stránke repozitára vpravo v časti Releases → "Najnovší launcher"
+# (a aj v behu workflowu v časti Artifacts).
 
 on:
   push:
@@ -9,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   launcher:
@@ -35,3 +36,12 @@ jobs:
           name: domaca-tv-launcher
           path: domaca-tv-launcher.apk
           retention-days: 30
+      - name: Zverejnenie v Releases (Najnovší launcher)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete najnovsi --yes --cleanup-tag || true
+          gh release create najnovsi domaca-tv-launcher.apk \
+            --title "Najnovší launcher" \
+            --notes "Automaticky zostavené z commitu ${GITHUB_SHA::7}. Stiahni domaca-tv-launcher.apk." \
+            --target "$GITHUB_SHA" --latest
